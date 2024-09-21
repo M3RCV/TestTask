@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from app.students.router import router as router_students
+from app.users.router import router as router_students
 from app.posts.routers import router as router_posts
+from app.users.auth_router import router as router_auth
 
 app = FastAPI()
 
@@ -10,3 +11,4 @@ def home_page():
 
 app.include_router(router_students)
 app.include_router(router_posts)
+app.include_router(router_auth)

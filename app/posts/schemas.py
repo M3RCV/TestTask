@@ -10,4 +10,4 @@ class SPost(BaseModel):
 
 class SPostADD(BaseModel):
     user_id: int = Field(..., description="ID пользователя")
-    text: str = Field(..., description="текст поста")
+    text: str = Field(..., description="Текст поста")
