@@ -6,7 +6,7 @@ from app.users.dao import UserDAO
 from app.users.dependencies import get_current_user
 from app.users.schemas import SUserADD, SUserUPD
 
-router = APIRouter(prefix='/auth', tags=['Auth'])
+router = APIRouter(prefix='/auth', tags=['Аутентификация и регистрация'])
 
 @router.post("/register/")
 async def register_user(user_data: SUserADD) -> dict:
@@ -33,6 +33,6 @@ async def get_me(user_data: User = Depends(get_current_user)):
     return user_data
 
 @router.post("/logout/")
-async def logout_user(response: Response):
+async def logout_user(response: Response, user_data: User = Depends(get_current_user)):
     response.delete_cookie(key="users_access_token")
     return {'message': 'Пользователь успешно вышел из системы'}

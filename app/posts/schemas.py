@@ -11,3 +11,7 @@ class SPost(BaseModel):
 class SPostADD(BaseModel):
     user_id: int = Field(..., description="ID пользователя")
     text: str = Field(..., description="Текст поста")
+
+class SPostUPD(BaseModel):
+    post_id: int = Field(..., description="ID поста")
+    text: str = Field(..., description="Новый текст поста")

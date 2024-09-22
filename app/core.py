@@ -10,6 +10,11 @@ class BaseDAO:
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
+            try:
+                await session.commit()
+            except SQLAlchemyError as e:
+                await session.rollback()
+                raise e
             return result.scalars().all()
 
     @classmethod
@@ -17,6 +22,11 @@ class BaseDAO:
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(id=data_id)
             result = await session.execute(query)
+            try:
+                await session.commit()
+            except SQLAlchemyError as e:
+                await session.rollback()
+                raise e
             return result.scalar_one_or_none()
 
     @classmethod
