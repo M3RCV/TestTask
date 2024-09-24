@@ -28,10 +28,6 @@ async def auth_user(user_data: SUserUPD, response: Response):
     response.set_cookie(key="users_access_token", value=access_token, httponly=True)
     return {'access_token': access_token, 'refresh_token': None}
 
-@router.get("/me/")
-async def get_me(user_data: User = Depends(get_current_user)):
-    return user_data
-
 @router.post("/logout/")
 async def logout_user(response: Response, user_data: User = Depends(get_current_user)):
     response.delete_cookie(key="users_access_token")

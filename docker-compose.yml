@@ -1,0 +1,23 @@
+version: '2.29.2-desktop.2'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: testDB
+    command: -p 1234
+    expose:
+      - 1234
+    env_file:
+      - .env-docker
+
+  app:
+    build:
+      context: .
+    env_file:
+      - .env-docker
+    container_name: fastapi_app
+    command: ["/fastapi_app/docker/app.sh"]
+    ports:
+      - 9999:8000
+    depends_on:
+      - db

@@ -1,6 +1,5 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict
-import bcrypt
 
 class SUser(BaseModel):
     model_config = ConfigDict(from_attributes=True)

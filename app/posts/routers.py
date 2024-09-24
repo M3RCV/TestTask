@@ -1,16 +1,27 @@
 from typing import Union
 
-from fastapi.exceptions import ResponseValidationError
 from fastapi import APIRouter,  HTTPException, status, Depends
 from pydantic import ValidationError
 from sqlalchemy.exc import DatabaseError
 
 from app.models import User
 from app.posts.dao import PostDAO
-from app.posts.schemas import SPost, SPostADD, SPostUPD
+from app.posts.schemas import SPost, SPostUPD
 from app.users.dependencies import get_current_user
 
 router = APIRouter(prefix='/posts', tags=['Работа с постами'])
+
+@router.get("/{user_id}/")
+async def get_post_by_user_id(user_id: int) -> Union[list[SPost], dict]:
+    try:
+        result = await PostDAO.find_by_user_id(this_id=user_id)
+        if result==[]:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'Пользователь с ID {user_id} не опубликовал ни одного поста или такого пользователя не существует')
+        return result
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail="Неверный формат данных " + str(e))
+    except DatabaseError as e:
+        raise HTTPException(status_code=500, detail="Ошибка базы данных " + str(e))
 
 @router.post("/add")
 async def create_post(this_text: str, user_data: User = Depends(get_current_user)) -> dict:
@@ -45,18 +56,6 @@ async def delete_post(post_id: int, user_data: User = Depends(get_current_user))
         raise HTTPException(status_code=500, detail="Ошибка базы данных " + str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Произошла внутренняя ошибка сервера " + str(e))
-
-@router.get("/{user_id}/")
-async def get_post_by_user_id(user_id: int) -> Union[list[SPost], dict]:
-    try:
-        result = await PostDAO.find_by_user_id(this_id=user_id)
-        if result==[]:
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=f'Пользователь с ID {user_id} не опубликовал ни одного поста или такого пользователя не существует')
-        return result
-    except ValidationError as e:
-        raise HTTPException(status_code=422, detail="Неверный формат данных " + str(e))
-    except DatabaseError as e:
-        raise HTTPException(status_code=500, detail="Ошибка базы данных " + str(e))
 
 @router.put("/update/")
 async def update_post(post: SPostUPD, user_data: User = Depends(get_current_user)) -> dict:
