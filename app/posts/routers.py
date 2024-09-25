@@ -44,7 +44,7 @@ async def delete_post(post_id: int, user_data: User = Depends(get_current_user))
         check1 = await PostDAO.find_by_id(post_id)
         check2 = await PostDAO.check_user_id(user_data.id)
         if check1 is None or check2 is None:
-            return {'message': "Пост был удален или он создан другим пользователем"}
+            return {'message': "Поста не существует или он создан другим пользователем"}
         check = await PostDAO.delete(id=post_id)
         if check:
             return {"message": f"Пост с ID {post_id} удален!"}
