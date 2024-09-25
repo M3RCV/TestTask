@@ -8,7 +8,7 @@ from app.users.dao import UserDAO
 def get_token(request: Request):
     token = request.cookies.get('users_access_token')
     if not token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token not found')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Аутентификация не была пройдена')
     return token
 
 
@@ -30,6 +30,6 @@ async def get_current_user(token: str = Depends(get_token)):
 
     user = await UserDAO.find_by_id(int(user_id))
     if not user:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='User not found')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Пользователь не найден')
 
     return user
