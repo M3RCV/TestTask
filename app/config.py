@@ -2,7 +2,7 @@ import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings): #настройки для подключения к базе данных через .env файл
     DB_HOST: str
     DB_PORT: int
     DB_NAME: str

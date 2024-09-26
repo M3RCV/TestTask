@@ -7,7 +7,7 @@ class PostDAO(BaseDAO):
     model = Post
 
     @classmethod
-    async def find_by_user_id(cls, this_id: int):
+    async def find_by_user_id(cls, this_id: int): #метод поиска постов по ID пользователя
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(user_id=this_id)
             result = await session.execute(query)
@@ -18,7 +18,7 @@ class PostDAO(BaseDAO):
                 raise e
             return result.scalars().all()
 
-    @classmethod
+    @classmethod #метод для проверки того кому принадлежит пост
     async def check_user_id(cls, this_user_id: int):
         async with async_session_maker() as session:
             query = select(cls.model).filter_by(user_id=this_user_id)
