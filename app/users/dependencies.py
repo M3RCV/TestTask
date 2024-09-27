@@ -5,14 +5,14 @@ from app.config import get_auth_data
 from app.users.dao import UserDAO
 
 
-def get_token(request: Request): #функция для получения токена пользователя
+def get_token(request: Request):
     token = request.cookies.get('users_access_token')
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Аутентификация не была пройдена')
     return token
 
 
-async def get_current_user(token: str = Depends(get_token)): #
+async def get_current_user(token: str = Depends(get_token)):
     try:
         auth_data = get_auth_data()
         payload = jwt.decode(token, auth_data['secret_key'], algorithms=[auth_data['algorithm']])
